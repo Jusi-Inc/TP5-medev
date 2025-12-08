@@ -37,6 +37,12 @@ public class Pion {
         }
         position=new Point2D(x,y);
     }
+    public Pion(int couleur, int x, int y) throws Exception{
+        this.couleur=couleur;
+        position=new Point2D(x,y);
+    }
+    
+    
     public void deplacer(Point2D cible) throws Exception{
         if (estLibre(cible)){
             this.position=cible;
@@ -46,17 +52,36 @@ public class Pion {
             throw probleme;
         }
     }
-    public void capturer(Point2D cible){
+    public boolean estLibre(Point2D test){
+        return true;
+    }
+    
+    
+    public void capturer(Point2D cible) throws Exception{
         boolean possible=false;
         for (Point2D test : pionMangeable()){
             if (test.equals(cible)){
-                possible 
+                int x=this.position.getX()+2*(this.position.getX()-cible.getX());
+                int y=this.position.getY()+2*(this.position.getY()-cible.getY());
+                Point2D positionArrivee=new Point2D(x,y);
+                if (estLibre(positionArrivee)){
+                    possible=true;
+                    this.position=positionArrivee;
+                }
+                else{
+                    Exception probleme=new Erreur("la case est inatteignable");
+                    throw probleme;
+                }
             }
-                
         }
+        if (!possible){
+            Exception probleme2=new Erreur("il n'est pas possible de manger le pion à l'endroit indiqué");
+            throw probleme2;
+        }
+        
     }
     public List<Point2D> pionMangeable(){
-        
+        return null;
     }
     
     public void devenirDame(){
