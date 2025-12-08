@@ -2,8 +2,7 @@
 
 Le meilleur rang de la classe
 
-
-Julien Daudin
-Nathan Degaudet
-Justin Lamarcade
-Alexandre Mestre
+- Julien Daudin
+- Nathan Degaudet
+- Justin Lamarcade
+- Alexandre Mestre
