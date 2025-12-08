@@ -35,7 +35,31 @@ public class Pion {
                 Exception Erreur = new Erreur("La couleur de création du Pion n'est pas correcte");
                 throw Erreur;
         }
+        position=new Point2D(x,y);
+    }
+    public void deplacer(Point2D cible) throws Exception{
+        if (estLibre(cible)){
+            this.position=cible;
+        }
+        else {
+            Exception probleme=new Erreur("la case est inatteignable");
+            throw probleme;
+        }
+    }
+    public void capturer(Point2D cible){
+        boolean possible=false;
+        for (Point2D test : pionMangeable()){
+            if (test.equals(cible)){
+                possible 
+            }
+                
+        }
+    }
+    public List<Point2D> pionMangeable(){
         
+    }
+    
+    public void devenirDame(){
         
     }
 }
