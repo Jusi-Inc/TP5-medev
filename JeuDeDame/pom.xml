@@ -13,7 +13,10 @@
         <sonar.organization>jusi-inc</sonar.organization>
         <sonar.host.url>://sonarcloud.io</sonar.host.url>
 
-        <build>
+        
+        
+    </properties>
+    <build>
 <plugins>
 <plugin>
 <groupId>org.jacoco</groupId>
@@ -36,6 +39,4 @@
 </plugin>
 </plugins>
 </build>
-        
-    </properties>
 </project>
