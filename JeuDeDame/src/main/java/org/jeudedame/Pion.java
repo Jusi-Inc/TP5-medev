@@ -4,7 +4,6 @@
  */
 package org.jeudedame;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -52,8 +51,9 @@ public class Pion {
             throw probleme;
         }
     }
-    public boolean estLibre(Point2D test){
-        return true;
+    public boolean estLibre(Point2D test) throws Erreur{
+        Erreur probleme = new Erreur("la vérification du point est impossible:"+test);
+        throw probleme;
     }
     
     
@@ -84,9 +84,6 @@ public class Pion {
         return null;
     }
     
-    public void devenirDame(){
-        
-    }
 
     public int getCouleur() {
         return couleur;
