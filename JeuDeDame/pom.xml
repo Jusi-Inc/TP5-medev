@@ -13,5 +13,29 @@
         <sonar.organization>jusi-inc</sonar.organization>
         <sonar.host.url>://sonarcloud.io</sonar.host.url>
 
+        < build >
+< plugins >
+< plugin >
+< groupId > org . jacoco </ groupId >
+< artifactId > JeuDeDame </ artifactId >
+< version >0.8.10 </ version >
+< executions >
+< execution >
+<goals>
+<goal> prepare - agent </ goal >
+</goals>
+</ execution >
+< execution >
+<id > report </ id >
+< phase > verify </ phase >
+< goals >
+< goal > report </ goal >
+</ goals >
+</ execution >
+</ executions >
+</ plugin >
+</ plugins >
+</ build >
+        
     </properties>
 </project>
