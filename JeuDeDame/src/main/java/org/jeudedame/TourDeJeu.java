@@ -187,8 +187,9 @@ public class TourDeJeu {
      * @param scanner Le scanner pour lire l'entrée
      * @param message Le message à afficher
      * @return La position saisie ou null si invalide/annulation
+     * @throws Erreur si le format est invalide
      */
-    private Point2D lirePosition(Scanner scanner, String message) {
+    private Point2D lirePosition(Scanner scanner, String message) throws Erreur {
         System.out.print(message);//NOSONAR
         String input = scanner.nextLine().trim().toUpperCase();
         
@@ -198,8 +199,7 @@ public class TourDeJeu {
         }
         
         if (input.length() < 2 || input.length() > 3) {
-            System.out.println("❌ Format invalide. Utilisez le format lettre+chiffre (ex: A3)");
-            return null;
+            throw new Erreur("❌ Format invalide. Utilisez le format lettre+chiffre (ex: A3)");
         }
         
         char colonne = input.charAt(0);
@@ -207,16 +207,14 @@ public class TourDeJeu {
         
         // Validation de la colonne (A-J)
         if (colonne < 'A' || colonne > 'J') {
-            System.out.println("❌ Colonne invalide. Utilisez A à J.");
-            return null;
+            throw new Erreur("❌ Colonne invalide. Utilisez A à J.");
         }
         
         // Validation de la ligne (1-10)
         try {
             int ligne = Integer.parseInt(ligneStr);
             if (ligne < 1 || ligne > 10) {
-                System.out.println("❌ Ligne invalide. Utilisez 1 à 10.");
-                return null;
+                throw new Erreur("❌ Ligne invalide. Utilisez 1 à 10.");
             }
             
             // Conversion en indices de tableau (0-9)
@@ -225,8 +223,7 @@ public class TourDeJeu {
             
             return new Point2D(x, y);
         } catch (NumberFormatException e) {
-            System.out.println("❌ Numéro de ligne invalide.");
-            return null;
+            throw new Erreur("❌ Numéro de ligne invalide.");
         }
     }
     
@@ -256,11 +253,11 @@ public class TourDeJeu {
      * @param pions La liste des pions sur le plateau
      * @param scanner Le scanner pour lire les entrées utilisateur
      * @return true si le tour s'est bien déroulé, false si abandon/erreur
+     * @throws Erreur si une erreur se produit pendant le tour
      */
-    public boolean jouerTour(ArrayList<Pion> pions, Scanner scanner) {
+    public boolean jouerTour(ArrayList<Pion> pions, Scanner scanner) throws Erreur {
         if (joueurActif == null) {
-            System.out.println("❌ Erreur: Aucun joueur actif défini.");
-            return false;
+            throw new Erreur("❌ Erreur: Aucun joueur actif défini.");
         }
         
         // Affichage de l'en-tête du tour
@@ -303,7 +300,7 @@ public class TourDeJeu {
                     return false;
                     
                 default:
-                    System.out.println("❌ Option invalide. Choisissez entre 1 et 3.");
+                    throw new Erreur("❌ Option invalide. Choisissez entre 1 et 3.");
             }
         }
         
@@ -315,8 +312,9 @@ public class TourDeJeu {
      * @param pions La liste des pions sur le plateau
      * @param scanner Le scanner pour lire les entrées
      * @return true si le déplacement est effectué, false sinon
+     * @throws Erreur si une erreur se produit pendant le déplacement
      */
-    private boolean effectuerDeplacement(ArrayList<Pion> pions, Scanner scanner) {
+    private boolean effectuerDeplacement(ArrayList<Pion> pions, Scanner scanner) throws Erreur {
         System.out.println("\n🎯 Déplacement d'une pièce");//NOSONAR
         System.out.println("─".repeat(40));//NOSONAR
         
@@ -333,15 +331,13 @@ public class TourDeJeu {
             // Vérifier qu'il y a bien une pièce à cette position
             pionADeplacer = trouverPionAPosition(pions, depart.getX(), depart.getY());
             if (pionADeplacer == null) {
-                System.out.println("❌ Aucune pièce à cette position.");
+                System.out.println("❌ Aucune pièce à cette position.");//NOSONAR
                 depart = null;
             } else {
                 // Vérifier que la pièce appartient au joueur actif
                 int couleurJoueur = joueurActif.getCouleur() ? 1 : 0;
                 if (pionADeplacer.getCouleur() != couleurJoueur) {
-                    System.out.println("❌ Cette pièce ne vous appartient pas.");
-                    depart = null;
-                    pionADeplacer = null;
+                    throw new Erreur("❌ Cette pièce ne vous appartient pas.");
                 }
             }
         }
@@ -358,14 +354,12 @@ public class TourDeJeu {
             // Vérifier que la case d'arrivée est vide
             Pion pionArrivee = trouverPionAPosition(pions, arrivee.getX(), arrivee.getY());
             if (pionArrivee != null) {
-                System.out.println("❌ La case d'arrivée est occupée.");
-                arrivee = null;
+                throw new Erreur("❌ La case d'arrivée est occupée.");
             }
             
             // Vérifier que c'est une case noire (jouable)
             if (arrivee != null && (arrivee.getX() + arrivee.getY()) % 2 == 0) {
-                System.out.println("❌ Les pions ne peuvent se déplacer que sur les cases noires.");
-                arrivee = null;
+                throw new Erreur("❌ Les pions ne peuvent se déplacer que sur les cases noires.");
             }
         }
         
@@ -388,15 +382,13 @@ public class TourDeJeu {
                 System.out.println("\n✅ Capture effectuée: " + formatPosition(depart) + " ✕ " + formatPosition(arrivee));//NOSONAR
             }
             else {
-                System.out.println("❌ Déplacement invalide: distance incorrecte.");
-                return false;
+                throw new Erreur("❌ Déplacement invalide: distance incorrecte.");
             }
             
             return true;
             
         } catch (Exception e) {
-            System.out.println("❌ Erreur lors du déplacement: " + e.getMessage());
-            return false;
+            throw new Erreur("❌ Erreur lors du déplacement: " + e.getMessage());
         }
     }
     
