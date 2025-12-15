@@ -115,18 +115,18 @@ public class TourDeJeu {
      * @param pions La liste des pions sur le plateau
      */
     private void afficherGrille(ArrayList<Pion> pions) {
-        System.out.println("\n╔════════════════════════════════════════╗");
-        System.out.println("║         GRILLE DE JEU DE DAMES        ║");
-        System.out.println("╠════════════════════════════════════════╣");
-        System.out.println("║    A  B  C  D  E  F  G  H  I  J       ║");
-        System.out.println("╟────────────────────────────────────────╢");
+        System.out.println("\n╔════════════════════════════════════════╗"); //NOSONAR
+        System.out.println("║         GRILLE DE JEU DE DAMES        ║"); //NOSONAR
+        System.out.println("╠════════════════════════════════════════╣"); //NOSONAR
+        System.out.println("║    A  B  C  D  E  F  G  H  I  J       ║"); //NOSONAR
+        System.out.println("╟────────────────────────────────────────╢"); //NOSONAR
         
         for (int i = 0; i < 10; i++) {
-            System.out.print("║ " + (i + 1));
-            if (i < 9) System.out.print(" ");
+            System.out.print("║ " + (i + 1));//NOSONAR
+            if (i < 9) System.out.print(" ");//NOSONAR
             
             for (int j = 0; j < 10; j++) {
-                System.out.print(" ");
+                System.out.print(" ");//NOSONAR
                 
                 // Chercher s'il y a un pion à cette position
                 Pion pionAPosition = trouverPionAPosition(pions, i, j);
@@ -134,23 +134,23 @@ public class TourDeJeu {
                 if (pionAPosition == null) {
                     // Case vide - alternance noir/blanc
                     if ((i + j) % 2 == 0) {
-                        System.out.print("□ "); // Case blanche (non jouable)
+                        System.out.print("□ "); //NOSONAR // Case blanche (non jouable)
                     } else {
-                        System.out.print("■ "); // Case noire (jouable)
+                        System.out.print("■ "); //NOSONAR // Case noire (jouable)
                     }
                 } else {
                     // Affichage de la pièce selon sa couleur
                     if (pionAPosition.getCouleur() == 0) {
-                        System.out.print("○ "); // Pion blanc
+                        System.out.print("○ "); //NOSONAR // Pion blanc
                     } else {
-                        System.out.print("● "); // Pion noir
+                        System.out.print("● "); //NOSONAR // Pion noir
                     }
                 }
             }
-            System.out.println("   ║");
+            System.out.println("   ║");//NOSONAR
         }
         
-        System.out.println("╚════════════════════════════════════════╝");
+        System.out.println("╚════════════════════════════════════════╝");//NOSONAR
     }
     
     /**
@@ -174,11 +174,11 @@ public class TourDeJeu {
      * Affiche le menu d'options pour le joueur
      */
     private void afficherMenuOptions() {
-        System.out.println("\n┌─────────────── OPTIONS ───────────────┐");
-        System.out.println("│ 1. Déplacer une pièce                 │");
-        System.out.println("│ 2. Abandonner la partie               │");
-        System.out.println("│ 3. Sauvegarder et quitter             │");
-        System.out.println("└───────────────────────────────────────┘");
+        System.out.println("\n┌─────────────── OPTIONS ───────────────┐");//NOSONAR
+        System.out.println("│ 1. Déplacer une pièce                 │");//NOSONAR
+        System.out.println("│ 2. Abandonner la partie               │");//NOSONAR
+        System.out.println("│ 3. Sauvegarder et quitter             │");//NOSONAR
+        System.out.println("└───────────────────────────────────────┘");//NOSONAR
     }
     
     /**
@@ -189,7 +189,7 @@ public class TourDeJeu {
      * @return La position saisie ou null si invalide/annulation
      */
     private Point2D lirePosition(Scanner scanner, String message) {
-        System.out.print(message);
+        System.out.print(message);//NOSONAR
         String input = scanner.nextLine().trim().toUpperCase();
         
         // Permettre l'annulation
@@ -264,10 +264,10 @@ public class TourDeJeu {
         }
         
         // Affichage de l'en-tête du tour
-        System.out.println("\n" + "═".repeat(50));
-        System.out.println("🎮 TOUR #" + numeroTour);
-        System.out.println("═".repeat(50));
-        System.out.println("👤 Joueur: " + joueurActif.getNom());
+        System.out.println("\n" + "═".repeat(50));//NOSONAR
+        System.out.println("🎮 TOUR #" + numeroTour);//NOSONAR
+        System.out.println("═".repeat(50));//NOSONAR
+        System.out.println("👤 Joueur: " + joueurActif.getNom());//NOSONAR
         
         // Affichage de la grille
         afficherGrille(pions);
@@ -277,7 +277,7 @@ public class TourDeJeu {
         
         boolean tourTermine = false;
         while (!tourTermine) {
-            System.out.print("\n➤ Choisissez une option (1-3): ");
+            System.out.print("\n➤ Choisissez une option (1-3): ");//NOSONAR
             String choix = scanner.nextLine().trim();
             
             switch (choix) {
@@ -288,18 +288,18 @@ public class TourDeJeu {
                     
                 case "2":
                     // Abandonner
-                    System.out.print("\n⚠️  Êtes-vous sûr de vouloir abandonner? (O/N): ");
+                    System.out.print("\n⚠️  Êtes-vous sûr de vouloir abandonner? (O/N): ");//NOSONAR
                     String confirmation = scanner.nextLine().trim().toUpperCase();
                     if (confirmation.equals("O") || confirmation.equals("OUI")) {
-                        System.out.println("🏳️  " + joueurActif.getNom() + " abandonne la partie.");
+                        System.out.println("🏳️  " + joueurActif.getNom() + " abandonne la partie.");//NOSONAR
                         return false;
                     }
                     break;
                     
                 case "3":
                     // Sauvegarder et quitter
-                    System.out.println("💾 Sauvegarde de la partie...");
-                    System.out.println("   (Fonctionnalité à implémenter avec Sauvegarde.java)");
+                    System.out.println("💾 Sauvegarde de la partie...");//NOSONAR
+                    System.out.println("   (Fonctionnalité à implémenter avec Sauvegarde.java)");//NOSONAR
                     return false;
                     
                 default:
@@ -317,16 +317,16 @@ public class TourDeJeu {
      * @return true si le déplacement est effectué, false sinon
      */
     private boolean effectuerDeplacement(ArrayList<Pion> pions, Scanner scanner) {
-        System.out.println("\n🎯 Déplacement d'une pièce");
-        System.out.println("─".repeat(40));
+        System.out.println("\n🎯 Déplacement d'une pièce");//NOSONAR
+        System.out.println("─".repeat(40));//NOSONAR
         
         // Lecture de la position de départ
         Point2D depart = null;
         Pion pionADeplacer = null;
         while (depart == null) {
-            depart = lirePosition(scanner, "📍 Position de départ (ex: A3) ou 'A' pour annuler: ");
+            depart = lirePosition(scanner, "📍 Position de départ (ex: A3) ou 'A' pour annuler: ");//NOSONAR
             if (depart == null) {
-                System.out.println("⚠️  Annulation du déplacement.");
+                System.out.println("⚠️  Annulation du déplacement.");//NOSONAR
                 return false;
             }
             
@@ -349,7 +349,7 @@ public class TourDeJeu {
         // Lecture de la position d'arrivée
         Point2D arrivee = null;
         while (arrivee == null) {
-            arrivee = lirePosition(scanner, "📍 Position d'arrivée (ex: B4) ou 'A' pour annuler: ");
+            arrivee = lirePosition(scanner, "📍 Position d'arrivée (ex: B4) ou 'A' pour annuler: ");//NOSONAR
             if (arrivee == null) {
                 System.out.println("⚠️  Annulation du déplacement.");
                 return false;
@@ -380,12 +380,12 @@ public class TourDeJeu {
             // Si distance ≈ √2, c'est un déplacement simple
             if (Math.abs(distance - Math.sqrt(2)) < 0.1) {
                 pionADeplacer.deplacer(arrivee);
-                System.out.println("\n✅ Déplacement effectué: " + formatPosition(depart) + " → " + formatPosition(arrivee));
+                System.out.println("\n✅ Déplacement effectué: " + formatPosition(depart) + " → " + formatPosition(arrivee));//NOSONAR
             }
             // Si distance ≈ 2√2, c'est potentiellement une capture
             else if (Math.abs(distance - 2 * Math.sqrt(2)) < 0.1) {
                 pionADeplacer.capturer(arrivee);
-                System.out.println("\n✅ Capture effectuée: " + formatPosition(depart) + " ✕ " + formatPosition(arrivee));
+                System.out.println("\n✅ Capture effectuée: " + formatPosition(depart) + " ✕ " + formatPosition(arrivee));//NOSONAR
             }
             else {
                 System.out.println("❌ Déplacement invalide: distance incorrecte.");
