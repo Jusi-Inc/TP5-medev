@@ -3,28 +3,58 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package org.jeudedame;
+
 import java.util.Random;
+
 /**
  * Classe des vecteurs 2D permettant de connaître la positiona de chaque entité
+ *
  * @author julda
  */
-public class Point2D{
+public class Point2D {
+
     private int x;
     private int y;
-    
+
+    /**
+     * un objet qui permet de générer des nombres aléatoires
+     */
+    public final Random generateur;
+
     /**
      *
      * @param pos2 position à comparer
      * @return booléen les positions x et y des 2 positions sont égales
      */
-    public boolean equals(Point2D pos2){
-        return (this.x==pos2.getX() && this.y==pos2.getY());
+    @Override
+    public boolean equals(Object pos2) {
+        if (this == pos2) {
+            return true;
+        }
+        if (pos2 == null || getClass() != pos2.getClass()) {
+            return false;
+        }
+        
+        Point2D other = (Point2D) pos2;
+        return (this.x == other.getX() && this.y == other.getY());
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 29 * hash + this.x;
+        hash = 29 * hash + this.y;
+        return hash;
+    }
+
     
-    /**
-     * création d'un pointeur vers la case centrale
-     */
-    public Point2D(){
+
+
+/**
+ * création d'un pointeur vers la case centrale
+ */
+public Point2D(){
+        this.generateur = new Random();
         x=0;
         y=0;
     }
@@ -33,7 +63,6 @@ public class Point2D{
      * génération d'une nouvelle position aléatoire
      */
     public void randomPos(){
-        Random generateur=new Random();
         this.x=generateur.nextInt(50);
         this.y=generateur.nextInt(50);
     }
@@ -43,6 +72,7 @@ public class Point2D{
      * @param pointeur pointeur à copier
      */
     public Point2D(Point2D pointeur){
+        this.generateur = new Random();
         x=pointeur.getX();
         y=pointeur.getY();
     }
@@ -53,6 +83,7 @@ public class Point2D{
      * @param ycord coordonnée y du vecteur
      */
     public Point2D(int xcord, int ycord){
+        this.generateur = new Random();
         x=xcord;
         y=ycord;
     }
