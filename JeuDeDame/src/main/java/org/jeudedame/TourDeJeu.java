@@ -122,35 +122,67 @@ public class TourDeJeu {
         System.out.println("╟────────────────────────────────────────╢"); //NOSONAR
         
         for (int i = 0; i < 10; i++) {
-            System.out.print("║ " + (i + 1));//NOSONAR
-            if (i < 9) System.out.print(" ");//NOSONAR
-            
-            for (int j = 0; j < 10; j++) {
-                System.out.print(" ");//NOSONAR
-                
-                // Chercher s'il y a un pion à cette position
-                Pion pionAPosition = trouverPionAPosition(pions, i, j);
-                
-                if (pionAPosition == null) {
-                    // Case vide - alternance noir/blanc
-                    if ((i + j) % 2 == 0) {
-                        System.out.print("□ "); //NOSONAR // Case blanche (non jouable)
-                    } else {
-                        System.out.print("■ "); //NOSONAR // Case noire (jouable)
-                    }
-                } else {
-                    // Affichage de la pièce selon sa couleur
-                    if (pionAPosition.getCouleur() == 0) {
-                        System.out.print("○ "); //NOSONAR // Pion blanc
-                    } else {
-                        System.out.print("● "); //NOSONAR // Pion noir
-                    }
-                }
-            }
-            System.out.println("   ║");//NOSONAR
+            afficherLigne(pions, i);
         }
         
         System.out.println("╚════════════════════════════════════════╝");//NOSONAR
+    }
+    
+    /**
+     * Affiche une ligne du plateau de jeu
+     * @param pions La liste des pions
+     * @param ligne Le numéro de ligne à afficher (0-9)
+     */
+    private void afficherLigne(ArrayList<Pion> pions, int ligne) {
+        System.out.print("║ " + (ligne + 1));//NOSONAR
+        if (ligne < 9) System.out.print(" ");//NOSONAR
+        
+        for (int colonne = 0; colonne < 10; colonne++) {
+            System.out.print(" ");//NOSONAR
+            afficherCellule(pions, ligne, colonne);
+        }
+        System.out.println("   ║");//NOSONAR
+    }
+    
+    /**
+     * Affiche une cellule du plateau (pion ou case vide)
+     * @param pions La liste des pions
+     * @param ligne La ligne de la cellule
+     * @param colonne La colonne de la cellule
+     */
+    private void afficherCellule(ArrayList<Pion> pions, int ligne, int colonne) {
+        Pion pionAPosition = trouverPionAPosition(pions, ligne, colonne);
+        
+        if (pionAPosition == null) {
+            afficherCaseVide(ligne, colonne);
+        } else {
+            afficherPion(pionAPosition);
+        }
+    }
+    
+    /**
+     * Affiche une case vide (noire ou blanche)
+     * @param ligne La ligne de la case
+     * @param colonne La colonne de la case
+     */
+    private void afficherCaseVide(int ligne, int colonne) {
+        if ((ligne + colonne) % 2 == 0) {
+            System.out.print("□ "); //NOSONAR // Case blanche (non jouable)
+        } else {
+            System.out.print("■ "); //NOSONAR // Case noire (jouable)
+        }
+    }
+    
+    /**
+     * Affiche un pion selon sa couleur
+     * @param pion Le pion à afficher
+     */
+    private void afficherPion(Pion pion) {
+        if (pion.getCouleur() == 0) {
+            System.out.print("○ "); //NOSONAR // Pion blanc
+        } else {
+            System.out.print("● "); //NOSONAR // Pion noir
+        }
     }
     
     /**
@@ -318,78 +350,155 @@ public class TourDeJeu {
         System.out.println("\n🎯 Déplacement d'une pièce");//NOSONAR
         System.out.println("─".repeat(40));//NOSONAR
         
-        // Lecture de la position de départ
+        // Lecture et validation de la position de départ
+        Pion pionADeplacer = lireEtValiderPionDepart(pions, scanner);
+        if (pionADeplacer == null) {
+            return false;
+        }
+        Point2D depart = pionADeplacer.getPosition();
+        
+        // Lecture et validation de la position d'arrivée
+        Point2D arrivee = lireEtValiderPositionArrivee(pions, scanner);
+        if (arrivee == null) {
+            return false;
+        }
+        
+        // Enregistrement et exécution du déplacement
+        this.positionDepart = depart;
+        this.positionArrivee = arrivee;
+        
+        executerMouvement(pionADeplacer, depart, arrivee);
+        return true;
+    }
+    
+    /**
+     * Lit et valide la sélection d'un pion de départ
+     * @param pions La liste des pions
+     * @param scanner Le scanner pour lire l'entrée
+     * @return Le pion sélectionné ou null si annulation
+     * @throws Erreur si le pion n'appartient pas au joueur
+     */
+    private Pion lireEtValiderPionDepart(ArrayList<Pion> pions, Scanner scanner) throws Erreur {
         Point2D depart = null;
         Pion pionADeplacer = null;
+        
         while (depart == null) {
             depart = lirePosition(scanner, "📍 Position de départ (ex: A3) ou 'A' pour annuler: ");//NOSONAR
             if (depart == null) {
                 System.out.println("⚠️  Annulation du déplacement.");//NOSONAR
-                return false;
+                return null;
             }
             
-            // Vérifier qu'il y a bien une pièce à cette position
             pionADeplacer = trouverPionAPosition(pions, depart.getX(), depart.getY());
             if (pionADeplacer == null) {
-                System.out.println("❌ Aucune pièce à cette position.");//NOSONAR
-                depart = null;
-            } else {
-                // Vérifier que la pièce appartient au joueur actif
-                int couleurJoueur = joueurActif.getCouleur() ? 1 : 0;
-                if (pionADeplacer.getCouleur() != couleurJoueur) {
-                    throw new Erreur("❌ Cette pièce ne vous appartient pas.");
-                }
+                throw new Erreur("❌ Aucune pièce à cette position.");
+            } else if (!pionAppartientAuJoueur(pionADeplacer)) {
+                throw new Erreur("❌ Cette pièce ne vous appartient pas.");
             }
         }
         
-        // Lecture de la position d'arrivée
+        return pionADeplacer;
+    }
+    
+    /**
+     * Vérifie si un pion appartient au joueur actif
+     * @param pion Le pion à vérifier
+     * @return true si le pion appartient au joueur actif
+     */
+    private boolean pionAppartientAuJoueur(Pion pion) {
+        int couleurJoueur = joueurActif.getCouleur() ? 1 : 0;
+        return pion.getCouleur() == couleurJoueur;
+    }
+    
+    /**
+     * Lit et valide une position d'arrivée
+     * @param pions La liste des pions
+     * @param scanner Le scanner pour lire l'entrée
+     * @return La position d'arrivée ou null si annulation
+     * @throws Erreur si la position est invalide
+     */
+    private Point2D lireEtValiderPositionArrivee(ArrayList<Pion> pions, Scanner scanner) throws Erreur {
         Point2D arrivee = null;
+        
         while (arrivee == null) {
             arrivee = lirePosition(scanner, "📍 Position d'arrivée (ex: B4) ou 'A' pour annuler: ");//NOSONAR
             if (arrivee == null) {
-                System.out.println("⚠️  Annulation du déplacement.");
-                return false;
+                System.out.println("⚠️  Annulation du déplacement.");//NOSONAR
+                return null;
             }
             
-            // Vérifier que la case d'arrivée est vide
-            Pion pionArrivee = trouverPionAPosition(pions, arrivee.getX(), arrivee.getY());
-            if (pionArrivee != null) {
+            if (!estCaseVide(pions, arrivee)) {
                 throw new Erreur("❌ La case d'arrivée est occupée.");
             }
             
-            // Vérifier que c'est une case noire (jouable)
-            if (arrivee != null && (arrivee.getX() + arrivee.getY()) % 2 == 0) {
+            if (!estCaseNoire(arrivee)) {
                 throw new Erreur("❌ Les pions ne peuvent se déplacer que sur les cases noires.");
             }
         }
         
-        // Enregistrement du déplacement
-        this.positionDepart = depart;
-        this.positionArrivee = arrivee;
-        
-        // Tentative de déplacement du pion
+        return arrivee;
+    }
+    
+    /**
+     * Vérifie si une case est vide
+     * @param pions La liste des pions
+     * @param position La position à vérifier
+     * @return true si la case est vide
+     */
+    private boolean estCaseVide(ArrayList<Pion> pions, Point2D position) {
+        return trouverPionAPosition(pions, position.getX(), position.getY()) == null;
+    }
+    
+    /**
+     * Vérifie si une position correspond à une case noire (jouable)
+     * @param position La position à vérifier
+     * @return true si c'est une case noire
+     */
+    private boolean estCaseNoire(Point2D position) {
+        return (position.getX() + position.getY()) % 2 != 0;
+    }
+    
+    /**
+     * Exécute le mouvement du pion (déplacement ou capture)
+     * @param pion Le pion à déplacer
+     * @param depart La position de départ
+     * @param arrivee La position d'arrivée
+     * @throws Erreur si le mouvement est invalide
+     */
+    private void executerMouvement(Pion pion, Point2D depart, Point2D arrivee) throws Erreur {
         try {
             double distance = depart.distance(arrivee);
             
-            // Si distance ≈ √2, c'est un déplacement simple
-            if (Math.abs(distance - Math.sqrt(2)) < 0.1) {
-                pionADeplacer.deplacer(arrivee);
+            if (estDeplacementSimple(distance)) {
+                pion.deplacer(arrivee);
                 System.out.println("\n✅ Déplacement effectué: " + formatPosition(depart) + " → " + formatPosition(arrivee));//NOSONAR
-            }
-            // Si distance ≈ 2√2, c'est potentiellement une capture
-            else if (Math.abs(distance - 2 * Math.sqrt(2)) < 0.1) {
-                pionADeplacer.capturer(arrivee);
+            } else if (estCapture(distance)) {
+                pion.capturer(arrivee);
                 System.out.println("\n✅ Capture effectuée: " + formatPosition(depart) + " ✕ " + formatPosition(arrivee));//NOSONAR
-            }
-            else {
+            } else {
                 throw new Erreur("❌ Déplacement invalide: distance incorrecte.");
             }
-            
-            return true;
-            
         } catch (Exception e) {
             throw new Erreur("❌ Erreur lors du déplacement: " + e.getMessage());
         }
+    }
+    
+    /**
+     * Vérifie si la distance correspond à un déplacement simple
+     * @param distance La distance entre départ et arrivée
+     * @return true si c'est un déplacement simple
+     */
+    private boolean estDeplacementSimple(double distance) {
+        return Math.abs(distance - Math.sqrt(2)) < 0.1;
+    }
+    
+    /**
+     * Vérifie si la distance correspond à une capture
+     * @param distance La distance entre départ et arrivée
+     * @return true si c'est une capture
+     */
+    private boolean estCapture(double distance) {
+        return Math.abs(distance - 2 * Math.sqrt(2)) < 0.1;
     }
     
     /**
