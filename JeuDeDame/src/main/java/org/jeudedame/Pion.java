@@ -60,26 +60,30 @@ public class Pion {
     public void capturer(Point2D cible) throws Exception{
         boolean possible=false;
         for (Point2D test : pionMangeable()){
-            if (test.equals(cible)){
-                int x=this.position.getX()+2*(this.position.getX()-cible.getX());
-                int y=this.position.getY()+2*(this.position.getY()-cible.getY());
-                Point2D positionArrivee=new Point2D(x,y);
-                if (estLibre(positionArrivee)){
-                    possible=true;
-                    this.position=positionArrivee;
-                }
-                else{
-                    Exception probleme=new Erreur("la case est inatteignable");
-                    throw probleme;
+            if (test==null){
+                Erreur probleme = new Erreur("il n'y a pas de pion mangeable");
+                throw probleme;
+        } else {
+                if (test.equals(cible)){
+                    int x=this.position.getX()+2*(this.position.getX()-cible.getX());
+                    int y=this.position.getY()+2*(this.position.getY()-cible.getY());
+                    Point2D positionArrivee=new Point2D(x,y);
+                    if (estLibre(positionArrivee)){
+                        possible=true;
+                        this.position=positionArrivee;
+                    }
+                    else{
+                        Exception probleme=new Erreur("la case est inatteignable");
+                        throw probleme;
+                    }
                 }
             }
-        }
         if (!possible){
             Exception probleme2=new Erreur("il n'est pas possible de manger le pion à l'endroit indiqué");
             throw probleme2;
         }
         
-    }
+    }}
     public List<Point2D> pionMangeable(){
         return null;
     }
