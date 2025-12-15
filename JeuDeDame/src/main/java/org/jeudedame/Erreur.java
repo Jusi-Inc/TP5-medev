@@ -4,12 +4,18 @@
  */
 package org.jeudedame;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  *
  * @author nathan
  */
 public class Erreur extends Exception{
+    private final String texte;
+    private static final Logger logger = Logger.getLogger(Erreur.class.getName());
+    
     public Erreur(String texte){
-        super(texte);
+        this.texte="Une erreur est survenue"+texte;
+        logger.log(Level.SEVERE, this.texte);
     }
 }
