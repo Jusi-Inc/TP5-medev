@@ -19,8 +19,8 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>maven</artifactId>
+                <groupId>org.centrale.infosi</groupId>
+                <artifactId>JeuDeDame</artifactId>
                 <version>0.8.11</version>
                 <executions>
                     <execution>
