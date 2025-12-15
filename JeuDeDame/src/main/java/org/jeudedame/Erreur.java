@@ -9,8 +9,7 @@ package org.jeudedame;
  * @author nathan
  */
 public class Erreur extends Exception{
-    private final String texte;
     public Erreur(String texte){
-        this.texte=texte;
+        super(texte);
     }
 }
